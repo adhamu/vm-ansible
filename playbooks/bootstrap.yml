@@ -1,0 +1,70 @@
+- hosts: localhost
+
+  vars:
+    apache_service: httpd
+    apache_server_root: etc/httpd
+    www_user: vagrant
+    www_group: apache
+    directories:
+      - cgi-bin/
+      - error/
+      - html/
+
+  tasks:
+  - name: Ensure var/www/* directories exists
+    file:
+      path: /var/www/{{item}}
+      state: directory
+      mode: 0775
+      owner: "{{ www_user }}"
+      group: "{{ www_group }}"
+    with_items:
+      "{{ directories }}"
+
+  - name: Copy httpd conf file
+    copy:
+      src: httpd.conf
+      dest: /etc/httpd/conf/httpd.conf
+      mode: 0644
+      owner: "root"
+      group: "root"
+
+  - name: Configure vhosts configuration
+    copy:
+      src: "{{ item }}"
+      dest: /etc/httpd/conf.d/{{item}}
+      backup: yes
+    with_items:
+      - php.conf
+#      - ssl.conf
+
+  - name: Ensure var/www/* permissions are correct
+    file:
+      path: /var/www
+      state: directory
+      mode: 0775
+      recurse: yes
+
+  - name: Ensure var/lib/php/session/* permissions are correct
+    file:
+      path: /var/lib/php/session
+      state: directory
+      mode: 0775
+      recurse: yes
+
+  - name: Ensure Apache has selected state and enabled on boot.
+    service:
+      name: "{{ apache_service }}"
+      state: started
+      enabled: yes
+
+  handlers:
+  - name: Restart Apache
+    become: true
+    become_user: root
+    service:
+      name: "{{ apache_service }}"
+      state: restarted
+
+
+

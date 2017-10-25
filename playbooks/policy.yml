@@ -1,0 +1,46 @@
+- hosts: localhost
+  vars:
+
+  tasks:
+    - name: Ensure apt is updated
+      package:
+        name: apt
+        state: latest
+
+    - name: Ensure Linux kernel is updated
+      package:
+        name: kernel
+        state: latest
+
+    - name: Ensure vim, nano, screen and net-tools, openssl, openvpn and git are present
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - vim
+        - nano
+        - screen
+        - net-tools
+        - openssl
+        - openvpn
+        - git
+
+    - name: Ensure Apache 2.4 present
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - httpd
+
+    - name: ensure PHP 5.5 present
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - php55
+        - php55-php
+        - php55-php-devel
+        - php55-php-mysql
+        - php55-php-mbstring
+        - php55-php-pear
+        - php55-php-fpm
