@@ -23,14 +23,9 @@
 1. Installation
 
 ```
-$ git clone https://amitd@stash.cpwonlinesolutions.com:8443/scm/~amitd/vm.git
-$ cd vm
-
-# Loughborough?
+$ git clone **
+$ cd vm-ansible
 $ vagrant up
-
-# Publicly connected to the Internet?
-$ NO_PROXY=1 vagrant up
 
 # Get the IP
 $ vagrant ssh
@@ -47,11 +42,3 @@ $ ifconfig | grep -A1 enp0s8 | grep inet
 Synced folders are enabled. `src/` on the guest machine maps to `/var/www/html/` on the host machine.
 
 ---
-
-#### PHP CLI using SCL (per terminal session)
-
-```
-$ vagrant ssh
-$ scl enable php55 bash
-$ php -v
-```
